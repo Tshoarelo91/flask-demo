@@ -1,11 +1,10 @@
-import os
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-# In-memory storage for todos
+# Simple in-memory storage
 todos = []
 
 @app.route('/')
@@ -19,7 +18,7 @@ def get_todos():
 @app.route('/api/todos', methods=['POST'])
 def add_todo():
     todo = request.json
-    todo['id'] = len(todos) + 1  # Simple ID generation
+    todo['id'] = len(todos) + 1
     todos.append(todo)
     return jsonify(todo), 201
 
@@ -39,7 +38,3 @@ def delete_todo(todo_id):
         todos.remove(todo)
         return '', 204
     return jsonify({'error': 'Todo not found'}), 404
-
-port = int(os.environ.get('PORT', 10000))
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port)
